@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "ofxProcessFFT.h"
 #include "ofxGui.h"
+// #include "ofxSoundObjects.h"
+#include "ofxVideoRecorder.h"
 
 class ofApp : public ofBaseApp{
 
@@ -10,6 +12,7 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -24,14 +27,33 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		void resolutionChanged(int &resolution);
+		// void inputFlagChanged(bool &flag);
+
+		void recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args);
 		
-		ProcessFFT fft;
+		// image
 		ofImage lowNoiseImg;
 		ofImage midNoiseImg;
 		ofImage highNoiseImg;
+
+		// gui parameter
 		ofxPanel gui;
 		ofxFloatSlider level;
 		ofxIntSlider resolution;
 		ofxFloatSlider noiseFrequency;
-		ofxToggle isDebug;
+		ofxFloatSlider audioVolume;
+		ofxToggle isDrawFFTDebug;
+		ofxToggle isUseAudiofile;
+
+		// sound
+		ProcessFFT fft;
+		// ofSoundPlayer mySound;
+		// ofSoundBuffer buff;
+
+		// video recorder
+		int width, height;
+		ofxVideoRecorder vidRecorder;
+		bool isRec;
+		string filename;
+		ofFbo recFbo;
 };
