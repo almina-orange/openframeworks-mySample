@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <group>
-	<Input_level>100</Input_level>
-	<Resolution>256</Resolution>
-	<Noise_Frequency>80</Noise_Frequency>
+	<Input_level>120</Input_level>
+	<Resolution>58</Resolution>
+	<Noise_Frequency>107.52</Noise_Frequency>
+	<Noise_frequency>80</Noise_frequency>
 </group>

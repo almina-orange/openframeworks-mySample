@@ -33,4 +33,5 @@ class ofApp : public ofBaseApp{
 		ofxFloatSlider level;
 		ofxIntSlider resolution;
 		ofxFloatSlider noiseFrequency;
+		ofxToggle isDebug;
 };

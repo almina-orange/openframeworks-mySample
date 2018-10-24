@@ -7,6 +7,7 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     ofSetFrameRate(60);
     ofBackground(0, 0, 0);
+    ofSetLogLevel(OF_LOG_VERBOSE);
 
     // FFT setting
     fft.setup();
@@ -18,7 +19,8 @@ void ofApp::setup(){
     gui.setup();
     gui.add(level.setup("Input level", 100, 0, 2000));
     gui.add(resolution.setup("Resolution", 256, 2, 1024));
-    gui.add(noiseFrequency.setup("Noise Frequency", 80.0, 0.0001, 1024.0));
+    gui.add(noiseFrequency.setup("Noise frequency", 80.0, 0.0001, 1024.0));
+    gui.add(isDebug.setup("Draw debug status", true));
     gui.loadFromFile("settings.xml");
 
     // Initialize image
@@ -35,8 +37,12 @@ void ofApp::update(){
     float midValue = ofMap(fft.getMidVal(), 0, 1, 0, level);
     float highValue = ofMap(fft.getHighVal(), 0, 1, 0, level);
 
+    // ofLogVerbose("ofApp") << "low value : " << lowValue;
+    // ofLogVerbose("ofApp") << "middle value : " << midValue;
+    // ofLogVerbose("ofApp") << "high value : " << highValue << "\n";
+
     int tmpIndex;
-    ofPixels lowPixels = lowNoiseImg.getPixels();
+    ofPixels& lowPixels = lowNoiseImg.getPixels();
     tmpIndex = 0;
     for (int y = 0; y < lowNoiseImg.getHeight(); y++) {
         for (int x = 0; x < lowNoiseImg.getWidth(); x++) {
@@ -47,7 +53,7 @@ void ofApp::update(){
     }
     lowNoiseImg.update();
 
-    ofPixels midPixels = midNoiseImg.getPixels();
+    ofPixels& midPixels = midNoiseImg.getPixels();
     tmpIndex = 0;
     for (int y = 0; y < midNoiseImg.getHeight(); y++) {
         for (int x = 0; x < midNoiseImg.getWidth(); x++) {
@@ -58,7 +64,7 @@ void ofApp::update(){
     }
     midNoiseImg.update();
 
-    ofPixels highPixels = highNoiseImg.getPixels();
+    ofPixels& highPixels = highNoiseImg.getPixels();
     tmpIndex = 0;
     for (int y = 0; y < highNoiseImg.getHeight(); y++) {
         for (int x = 0; x < highNoiseImg.getWidth(); x++) {
@@ -77,12 +83,17 @@ void ofApp::draw(){
     ofSetColor(0, 255, 0);  midNoiseImg.draw(0, 0, ofGetWidth(), ofGetHeight());
     ofSetColor(0, 0, 255);  highNoiseImg.draw(0, 0, ofGetWidth(), ofGetHeight());
 
+    if (isDebug) {
+        fft.drawDebug();
+        fft.drawBars();
+    }
+
     gui.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == 'd') {  isDebug = !isDebug;  std::cout << "ofApp : [Pressed key]" << endl;  }
 }
 
 //--------------------------------------------------------------
