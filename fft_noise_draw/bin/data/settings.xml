@@ -4,7 +4,7 @@
 	<Resolution>68</Resolution>
 	<Noise_Frequency>80</Noise_Frequency>
 	<Noise_frequency>97.2801</Noise_frequency>
-	<Audio_volume>0.5</Audio_volume>
+	<Audio_volume>0.185</Audio_volume>
 	<Draw_FFT_debug>1</Draw_FFT_debug>
 	<Use_audio_file>1</Use_audio_file>
 </group>

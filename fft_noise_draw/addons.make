@@ -1,3 +1,5 @@
+ofxAudioFile
 ofxFft
 ofxGui
+ofxSoundObjects
 ofxVideoRecorder

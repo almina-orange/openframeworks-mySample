@@ -12,14 +12,12 @@ void ofApp::setup(){
 
     // GUI setting
     resolution.addListener(this, &ofApp::resolutionChanged);  // function hook
-    // isUseAudiofile.addListener(this, &ofApp::inputFlagChanged);
     gui.setup();
     gui.add(level.setup("Input level", 100, 0, 2000));
     gui.add(resolution.setup("Resolution", 256, 2, 1024));
     gui.add(noiseFrequency.setup("Noise frequency", 80.0, 0.0001, 1024.0));
     gui.add(audioVolume.setup("Audio volume", 0.1, 0, 1.0));
     gui.add(isDrawFFTDebug.setup("Draw FFT debug", true));
-    // gui.add(isUseAudiofile.setup("Use audio file", true));
     gui.loadFromFile("settings.xml");
 
     // Initialize image
@@ -27,9 +25,10 @@ void ofApp::setup(){
     midNoiseImg.allocate(resolution, resolution, OF_IMAGE_GRAYSCALE);
     highNoiseImg.allocate(resolution, resolution, OF_IMAGE_GRAYSCALE);
 
-    // Get audio buffer from audio file
+    // Get audio buffer from audiofile
     /*** using addon "ofSoundfile.h" ***/
     // auto filename = ofToDataPath("ambientSound.wav");
+    // ofxSoundFile = mySound;
     // mySound.load(filename.data());
 
     // uint64_t samples = mySound.length();
@@ -45,26 +44,20 @@ void ofApp::setup(){
     // ofLogVerbose("Loaded buffer") << buff.size();
 
     /*** using addon ofxSoundObjects ***/
-    // FFT setting (for audio file)
-    // auto filename = ofToDataPath("ambientSound.wav");
-    // ofxLoadSound(buff, filename.data());
-    // ofLogVerbose("ofSoundBuffer") << "Loaded buffer : " << buff.size();
+    auto tmpFilename = ofToDataPath("ambientSound.wav");
+    ofxLoadSound(buff, tmpFilename.data());
+    ofLogVerbose("ofApp") << "Loaded buffer : " << buff.size();
 
-    // fft = ofxFft::create();
-    // fft->setSignal(buff.getBuffer());
-    // fft.setup(buff.size());
-    // fft.setBuffer(buff.getBuffer());
-
-    // FFT setting (for audio input)
+    // FFT setting
     fft.setup();
-    fft.setNumFFTBins(16);
+    fft.setNumFFTBins(128);
     fft.setNormalize(true);
 
-    // Load audio file
-    // auto filename = ofToDataPath("ambientSound.wav");
-    // mySound.load(filename.data());
-    // mySound.setVolume(audioVolume);
-    // mySound.setLoop(true);
+    // Soundplayer setting
+    auto tmpFilename2 = ofToDataPath("ambientSound.wav");
+    mySound.load(tmpFilename2.data());
+    mySound.setVolume(audioVolume);
+    mySound.setLoop(true);
     // mySound.play();
 
     // Video recorder settings
@@ -84,7 +77,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    // mySound.setVolume(audioVolume);
+    mySound.setVolume(audioVolume);
 
     fft.update();
 
@@ -173,7 +166,7 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if ( key == 'd' ) { isDrawFFTDebug = !(isDrawFFTDebug); }
+    if (key == 'd') { isDrawFFTDebug = !(isDrawFFTDebug); }
 
     if (key == 'r'){
         isRec = !isRec;
@@ -188,6 +181,10 @@ void ofApp::keyPressed(int key){
         isRec = false;
         vidRecorder.close();
     }
+
+    // switch input audio (device / audiofile)
+    if (key == 'k') { fft.setBuffer(buff.getBuffer());  mySound.play(); }
+    if (key == 'l') { fft.resetBuffer();  mySound.stop(); }
 }
 
 //--------------------------------------------------------------
@@ -247,20 +244,6 @@ void ofApp::resolutionChanged(int &resolution){
     midNoiseImg.allocate(resolution, resolution, OF_IMAGE_GRAYSCALE);
     highNoiseImg.allocate(resolution, resolution, OF_IMAGE_GRAYSCALE);
 }
-
-// //--------------------------------------------------------------
-// void ofApp::inputFlagChanged(bool &flag){ 
-//     if (flag) {
-//         /*** using addon ofxSoundObjects ***/
-//         // auto filename = ofToDataPath("ambientSound.wav");
-//         // ofxLoadSound(buff, filename.data());
-//         // ofLogVerbose("ofSoundBuffer") << "Loaded buffer : " << buff.size();
-
-//         // fft.setup(buff.size());
-//         // fft.setBuffer(buff.getBuffer());
-//     }
-//     ofLogVerbose("Flag") << flag;
-// }
 
 //--------------------------------------------------------------
 void ofApp::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){

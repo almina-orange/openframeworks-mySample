@@ -1,9 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxProcessFFT.h"
+#include "ofxProcessFFTCustom.hpp"
 #include "ofxGui.h"
-// #include "ofxSoundObjects.h"
+#include "ofxSoundObjects.h"
 #include "ofxVideoRecorder.h"
 
 class ofApp : public ofBaseApp{
@@ -27,8 +27,6 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		void resolutionChanged(int &resolution);
-		// void inputFlagChanged(bool &flag);
-
 		void recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args);
 		
 		// image
@@ -45,10 +43,11 @@ class ofApp : public ofBaseApp{
 		ofxToggle isDrawFFTDebug;
 		ofxToggle isUseAudiofile;
 
-		// sound
-		ProcessFFT fft;
-		// ofSoundPlayer mySound;
-		// ofSoundBuffer buff;
+		// sound, FFT
+		ProcessFFTCustom fft;
+		ofSoundPlayer mySound;
+		ofSoundBuffer buff;
+		ofSoundStream stream;
 
 		// video recorder
 		int width, height;
